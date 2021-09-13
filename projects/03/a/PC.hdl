@@ -16,5 +16,18 @@ CHIP PC {
     OUT out[16];
 
     PARTS:
-    // Put your code here:
+        // インクリメントした値
+        Inc16(in=preOut, out=incOut);
+
+        // インクリメントするかどうか判定する
+        Mux16(a=preOut, b=incOut, sel=inc, out=judgeIncOut);
+
+        // ロードするかどうか判定する
+        Mux16(a=judgeIncOut, b=in, sel=load, out=judgeLoadOut);
+
+        // リセットするかどうか判定する
+        Mux16(a=judgeLoadOut, b=false, sel=reset, out=judgeResetOut);
+
+        // DFF に保持して入力を遅延させる
+        DFF16(in=judgeResetOut, out=out, out=preOut);
 }
